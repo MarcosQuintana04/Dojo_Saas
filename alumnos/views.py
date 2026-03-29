@@ -4,8 +4,9 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from .models import Alumno, Asistencia, Pago
-from .forms import AlumnoForm  
-
+from .forms import AlumnoForm, AsistenciaForm, PagoForm  
+import datetime
+from django.db.models import Count
 
 # ─────────────────────────────────────────
 # VISTA 1: Lista de alumnos
@@ -115,3 +116,144 @@ def eliminar_alumno(request, pk):
 
     # GET: mostrar página de confirmación antes de eliminar
     return render(request, 'alumnos/confirmar_eliminar.html', {'alumno': alumno})
+
+
+# ─────────────────────────────────────────
+# ASISTENCIAS
+# ─────────────────────────────────────────
+
+@login_required
+def registrar_asistencia(request):
+    if request.method == 'POST':
+        form = AsistenciaForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Asistencia registrada.')
+            return redirect('alumnos:asistencias_hoy')
+        # Si hay error de unique_together (alumno ya registrado ese día),
+        # Django lo captura y lo muestra en el form automáticamente
+    else:
+        form = AsistenciaForm()
+
+    return render(request, 'asistencias/form.html', {
+        'form': form,
+        'titulo': 'Registrar Asistencia'
+    })
+
+
+@login_required
+def asistencias_hoy(request):
+    hoy = datetime.date.today()
+
+    # El doble guión bajo (__) en Django ORM significa "navegar por relación"
+    # fecha__date=hoy → busca registros donde el campo "fecha" sea igual a hoy
+    asistencias = Asistencia.objects.filter(fecha=hoy).select_related('alumno')
+
+    # select_related es una optimización importante.
+    # Sin él: Django hace 1 query para las asistencias + 1 query por cada
+    # alumno que necesita mostrar (problema N+1).
+    # Con él: Django hace 1 sola query con JOIN. Mucho más eficiente.
+
+    contexto = {
+        'asistencias': asistencias,
+        'hoy': hoy,
+        'presentes': asistencias.filter(presente=True).count(),
+        'ausentes': asistencias.filter(presente=False).count(),
+    }
+    return render(request, 'asistencias/hoy.html', contexto)
+
+
+@login_required
+def historial_asistencia(request, pk):
+    alumno = get_object_or_404(Alumno, pk=pk)
+    asistencias = alumno.asistencias.all()  # ya ordenadas por -fecha del Meta
+
+    # Calculamos estadísticas básicas
+    total = asistencias.count()
+    presentes = asistencias.filter(presente=True).count()
+    porcentaje = round((presentes / total * 100), 1) if total > 0 else 0
+
+    contexto = {
+        'alumno': alumno,
+        'asistencias': asistencias,
+        'total': total,
+        'presentes': presentes,
+        'porcentaje': porcentaje,
+    }
+    return render(request, 'asistencias/historial.html', contexto)
+
+
+# ─────────────────────────────────────────
+# PAGOS
+# ─────────────────────────────────────────
+
+@login_required
+def registrar_pago(request):
+    if request.method == 'POST':
+        form = PagoForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Pago registrado correctamente.')
+            return redirect('alumnos:deudores')
+    else:
+        form = PagoForm()
+
+    return render(request, 'pagos/form.html', {
+        'form': form,
+        'titulo': 'Registrar Pago'
+    })
+
+
+@login_required
+def deudores(request):
+    hoy = datetime.date.today()
+    mes_actual = hoy.month
+    anio_actual = hoy.year
+
+    # Aquí viene la lógica más interesante del sistema.
+    # Queremos: alumnos activos que NO tienen pago este mes/año.
+
+    # Paso 1: obtener los IDs de alumnos que SÍ pagaron este mes
+    alumnos_que_pagaron = Pago.objects.filter(
+        mes=mes_actual,
+        anio=anio_actual
+    ).values_list('alumno_id', flat=True)
+    # values_list con flat=True devuelve una lista plana: [1, 3, 7, ...]
+    # en vez de una lista de tuplas: [(1,), (3,), (7,), ...]
+
+    # Paso 2: excluir esos IDs de los alumnos activos
+    deudores = Alumno.objects.filter(
+        activo=True
+    ).exclude(
+        id__in=alumnos_que_pagaron
+    )
+    # id__in=lista → equivale a SQL: WHERE id NOT IN (1, 3, 7)
+    # El exclude() hace el NOT IN
+
+    # Alumnos al día (los que sí pagaron)
+    al_dia = Alumno.objects.filter(
+        activo=True,
+        id__in=alumnos_que_pagaron
+    )
+
+    contexto = {
+        'deudores': deudores,
+        'al_dia': al_dia,
+        'mes': hoy.strftime('%B %Y'),  # "Marzo 2025"
+        'total_deudores': deudores.count(),
+        'total_al_dia': al_dia.count(),
+    }
+    return render(request, 'pagos/deudores.html', contexto)
+
+
+@login_required
+def historial_pagos(request, pk):
+    alumno = get_object_or_404(Alumno, pk=pk)
+    pagos = alumno.pagos.all()
+
+    contexto = {
+        'alumno': alumno,
+        'pagos': pagos,
+        'total_pagado': sum(p.monto for p in pagos),
+    }
+    return render(request, 'pagos/historial.html', contexto)

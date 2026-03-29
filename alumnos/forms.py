@@ -1,15 +1,16 @@
 # alumnos/forms.py
 
 from django import forms
-from .models import Alumno
+from .models import Alumno, Asistencia, Pago
+import datetime
 
-
-class AlumnoForm(forms.ModelForm):
-    """
+"""
     ModelForm es la herramienta más poderosa de Django para formularios.
     En vez de definir cada campo a mano, Django lee el modelo y genera
     el formulario automáticamente. Solo indicás qué campos incluir.
-    """
+"""
+
+class AlumnoForm(forms.ModelForm):
 
     class Meta:
         model = Alumno
@@ -38,3 +39,70 @@ class AlumnoForm(forms.ModelForm):
             'disciplina':'Disciplina',
             'cinturon':  'Cinturón / Nivel',
         }
+        
+class AsistenciaForm(forms.ModelForm):
+
+    class Meta:
+        model = Asistencia
+        fields = ['alumno', 'fecha', 'presente', 'observacion']
+        widgets = {
+            'alumno': forms.Select(attrs={'class': 'form-select'}),
+            # DateInput con type="date" genera el selector de fecha del navegador
+            'fecha': forms.DateInput(
+                attrs={'class': 'form-control', 'type': 'date'},
+                format='%Y-%m-%d'
+            ),
+            'presente': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+            'observacion': forms.Textarea(attrs={
+                'class': 'form-control',
+                'rows': 2,
+                'placeholder': 'Opcional...'
+            }),
+        }
+        labels = {
+            'alumno': 'Alumno',
+            'fecha': 'Fecha',
+            'presente': '¿Presente?',
+            'observacion': 'Observación',
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Solo mostrar alumnos activos en el selector
+        self.fields['alumno'].queryset = Alumno.objects.filter(activo=True)
+        # Pre-seleccionar la fecha de hoy
+        self.fields['fecha'].initial = datetime.date.today()
+
+
+class PagoForm(forms.ModelForm):
+
+    class Meta:
+        model = Pago
+        fields = ['alumno', 'monto', 'mes', 'anio']
+        widgets = {
+            'alumno': forms.Select(attrs={'class': 'form-select'}),
+            'monto': forms.NumberInput(attrs={
+                'class': 'form-control',
+                'placeholder': '0.00',
+                'step': '0.01'  # permite decimales
+            }),
+            'mes': forms.Select(attrs={'class': 'form-select'}),
+            'anio': forms.NumberInput(attrs={
+                'class': 'form-control',
+                'placeholder': '2025'
+            }),
+        }
+        labels = {
+            'alumno': 'Alumno',
+            'monto': 'Monto (S/)',
+            'mes': 'Mes',
+            'anio': 'Año',
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['alumno'].queryset = Alumno.objects.filter(activo=True)
+        # Pre-seleccionar mes y año actual
+        hoy = datetime.date.today()
+        self.fields['mes'].initial = hoy.month
+        self.fields['anio'].initial = hoy.year

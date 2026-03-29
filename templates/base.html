@@ -53,7 +53,12 @@
                    class="{% if request.resolver_match.app_name == 'alumnos' %}active{% endif %}">
                     <i class="bi bi-people-fill me-2"></i> Alumnos
                 </a>
-                <!-- Aquí agregaremos Asistencias y Pagos en fases futuras -->
+                <a href="{% url 'alumnos:asistencias_hoy' %}">
+                    <i class="bi bi-calendar-check me-2"></i> Asistencias
+                </a>
+                <a href="{% url 'alumnos:deudores' %}">
+                    <i class="bi bi-cash-stack me-2"></i> Pagos
+                </a>
             </div>
 
             <!-- CONTENIDO PRINCIPAL -->

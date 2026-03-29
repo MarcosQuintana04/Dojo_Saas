@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+{% block titulo %}Pagos — Dojo Manager{% endblock %}
+
+{% block contenido %}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="mb-0">Estado de pagos</h2>
+        <small class="text-muted">{{ mes }}</small>
+    </div>
+    <a href="{% url 'alumnos:registrar_pago' %}" class="btn btn-success">
+        <i class="bi bi-plus-lg me-1"></i> Registrar pago
+    </a>
+</div>
+
+<div class="row g-4">
+
+    <!-- Columna deudores -->
+    <div class="col-md-6">
+        <div class="card border-danger shadow-sm">
+            <div class="card-header bg-danger text-white d-flex justify-content-between">
+                <span><i class="bi bi-exclamation-circle me-2"></i>Deben este mes</span>
+                <span class="badge bg-white text-danger">{{ total_deudores }}</span>
+            </div>
+            <div class="card-body p-0">
+                {% if deudores %}
+                <ul class="list-group list-group-flush">
+                    {% for alumno in deudores %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <a href="{% url 'alumnos:detalle' alumno.pk %}" class="text-decoration-none">
+                            {{ alumno.nombre }}
+                        </a>
+                        <div class="d-flex align-items-center gap-2">
+                            <small class="text-muted">{{ alumno.get_disciplina_display }}</small>
+                            <a href="{% url 'alumnos:registrar_pago' %}" class="btn btn-sm btn-outline-success">
+                                <i class="bi bi-cash"></i>
+                            </a>
+                        </div>
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% else %}
+                <div class="text-center py-4 text-muted">
+                    <i class="bi bi-check-circle text-success" style="font-size: 2rem;"></i>
+                    <p class="mt-2 mb-0">¡Todos pagaron este mes!</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Columna al día -->
+    <div class="col-md-6">
+        <div class="card border-success shadow-sm">
+            <div class="card-header bg-success text-white d-flex justify-content-between">
+                <span><i class="bi bi-check-circle me-2"></i>Al día</span>
+                <span class="badge bg-white text-success">{{ total_al_dia }}</span>
+            </div>
+            <div class="card-body p-0">
+                {% if al_dia %}
+                <ul class="list-group list-group-flush">
+                    {% for alumno in al_dia %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <a href="{% url 'alumnos:detalle' alumno.pk %}" class="text-decoration-none">
+                            {{ alumno.nombre }}
+                        </a>
+                        <small class="text-muted">{{ alumno.get_disciplina_display }}</small>
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% else %}
+                <div class="text-center py-4 text-muted">
+                    <p class="mt-2 mb-0">Sin pagos registrados aún.</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}
