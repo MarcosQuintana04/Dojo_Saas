@@ -17,7 +17,7 @@ class AlumnoForm(forms.ModelForm):
         # Listamos los campos que el usuario puede completar.
         # Nota: fecha_ingreso y activo NO están — los manejamos nosotros.
         fields = ['nombre', 'edad', 'telefono', 'email',
-                  'disciplina', 'cinturon']
+                  'disciplina', 'cinturon', 'fecha_ingreso']
 
         # Personalizamos los widgets (el HTML que se genera para cada campo)
         # para que sean compatibles con Bootstrap
@@ -28,6 +28,10 @@ class AlumnoForm(forms.ModelForm):
             'email':      forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'opcional'}),
             'disciplina': forms.Select(attrs={'class': 'form-select'}),
             'cinturon':   forms.Select(attrs={'class': 'form-select'}),
+            'fecha_ingreso': forms.DateInput(
+                attrs={'class': 'form-control', 'type':'date'},
+                format='%Y-%m-%d'
+            ),
         }
 
         # Etiquetas personalizadas (lo que aparece sobre cada campo)
@@ -38,6 +42,7 @@ class AlumnoForm(forms.ModelForm):
             'email':     'Correo electrónico',
             'disciplina':'Disciplina',
             'cinturon':  'Cinturón / Nivel',
+            'fecha_ingreso': 'Fecha de ingreso',
         }
         
 class AsistenciaForm(forms.ModelForm):
@@ -78,7 +83,7 @@ class PagoForm(forms.ModelForm):
 
     class Meta:
         model = Pago
-        fields = ['alumno', 'monto', 'mes', 'anio']
+        fields = ['alumno', 'monto', 'fecha_pago', 'mes', 'anio']
         widgets = {
             'alumno': forms.Select(attrs={'class': 'form-select'}),
             'monto': forms.NumberInput(attrs={
@@ -86,6 +91,10 @@ class PagoForm(forms.ModelForm):
                 'placeholder': '0.00',
                 'step': '0.01'  # permite decimales
             }),
+            'fecha_pago': forms.DateInput(  # ← agregar este widget
+                attrs={'class': 'form-control', 'type': 'date'},
+                format='%Y-%m-%d'
+            ),
             'mes': forms.Select(attrs={'class': 'form-select'}),
             'anio': forms.NumberInput(attrs={
                 'class': 'form-control',
@@ -95,6 +104,7 @@ class PagoForm(forms.ModelForm):
         labels = {
             'alumno': 'Alumno',
             'monto': 'Monto (S/)',
+            'fecha_pago':'Fecha de pago',
             'mes': 'Mes',
             'anio': 'Año',
         }
@@ -102,7 +112,7 @@ class PagoForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['alumno'].queryset = Alumno.objects.filter(activo=True)
-        # Pre-seleccionar mes y año actual
         hoy = datetime.date.today()
         self.fields['mes'].initial = hoy.month
         self.fields['anio'].initial = hoy.year
+        self.fields['fecha_pago'].initial = hoy

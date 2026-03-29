@@ -35,7 +35,7 @@ class Alumno(models.Model):
     email        = models.EmailField(blank=True, null=True)  # opcional
     disciplina   = models.CharField(max_length=10, choices=DISCIPLINA_CHOICES)
     cinturon     = models.CharField(max_length=20, choices=CINTURON_CHOICES)
-    fecha_ingreso = models.DateField(auto_now_add=True)
+    fecha_ingreso = models.DateField()
     activo       = models.BooleanField(default=True)
 
     def __str__(self):
@@ -86,7 +86,7 @@ class Pago(models.Model):
 
     alumno     = models.ForeignKey(Alumno, on_delete=models.CASCADE, related_name='pagos')
     monto      = models.DecimalField(max_digits=8, decimal_places=2)
-    fecha_pago = models.DateField(auto_now_add=True)
+    fecha_pago = models.DateField()
     mes        = models.PositiveIntegerField(choices=MES_CHOICES)
     anio       = models.PositiveIntegerField()
 

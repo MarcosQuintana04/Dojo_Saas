@@ -1,0 +1,16 @@
+<!-- SIDEBAR -->
+
+<div class="col-md-2 sidebar d-none d-md-block pt-3">
+    <a href="{% url 'alumnos:lista' %}"
+       class="{% if request.resolver_match.app_name == 'alumnos' and 'asistencia' not in request.resolver_match.url_name and 'pago' not in request.resolver_match.url_name and request.resolver_match.url_name != 'deudores' %}active{% endif %}">
+        <i class="bi bi-people-fill me-2"></i> Alumnos
+    </a>
+    <a href="{% url 'alumnos:asistencias_hoy' %}"
+       class="{% if 'asistencia' in request.resolver_match.url_name %}active{% endif %}">
+        <i class="bi bi-calendar-check me-2"></i> Asistencias
+    </a>
+    <a href="{% url 'alumnos:deudores' %}"
+       class="{% if 'pago' in request.resolver_match.url_name or request.resolver_match.url_name == 'deudores' %}active{% endif %}">
+        <i class="bi bi-cash-stack me-2"></i> Pagos
+    </a>
+</div>

@@ -1,0 +1,27 @@
+<nav class="d-md-none fixed-bottom navbar navbar-light bg-white border-top px-0">
+    <div class="container-fluid justify-content-around">
+
+        <a href="{% url 'alumnos:lista' %}"
+           class="d-flex flex-column align-items-center text-decoration-none py-2 px-3
+           {% if request.resolver_match.url_name == 'lista' or request.resolver_match.url_name == 'detalle' %}text-primary{% else %}text-secondary{% endif %}">
+            <i class="bi bi-people-fill" style="font-size: 1.4rem;"></i>
+            <small style="font-size: 0.65rem;">Alumnos</small>
+        </a>
+
+        <a href="{% url 'alumnos:asistencias_hoy' %}"
+           class="d-flex flex-column align-items-center text-decoration-none py-2 px-3
+           {% if 'asistencia' in request.resolver_match.url_name %}text-primary{% else %}text-secondary{% endif %}">
+            <i class="bi bi-calendar-check" style="font-size: 1.4rem;"></i>
+            <small style="font-size: 0.65rem;">Asistencias</small>
+        </a>
+
+        <a href="{% url 'alumnos:deudores' %}"
+           class="d-flex flex-column align-items-center text-decoration-none py-2 px-3
+           {% if 'pago' in request.resolver_match.url_name or request.resolver_match.url_name == 'deudores' %}text-primary{% else %}text-secondary{% endif %}">
+            <i class="bi bi-cash-stack" style="font-size: 1.4rem;"></i>
+            <small style="font-size: 0.65rem;">Pagos</small>
+        </a>
+
+    </div>
+</nav>
+<div class="d-md-none" style="height: 70px;"></div>
