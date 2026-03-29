@@ -125,3 +125,9 @@ LOGIN_URL = '/login/'
 
 # A dónde redirigir después de hacer logout
 LOGOUT_REDIRECT_URL = '/login/'
+
+# Dónde vive la carpeta static/ en desarrollo
+STATICFILES_DIRS = [BASE_DIR / 'static']
+
+# Dónde Django recopila todo para producción
+STATIC_ROOT = BASE_DIR / 'staticfiles'

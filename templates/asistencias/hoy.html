@@ -36,7 +36,7 @@
 {% if asistencias %}
 <div class="card shadow-sm">
     <div class="table-responsive">
-        <table class="table table-hover mb-0">
+        <table class="table table-hover mb-0 tabla-responsive">
             <thead class="table-dark">
                 <tr>
                     <th>Alumno</th>
@@ -48,20 +48,20 @@
             <tbody>
                 {% for a in asistencias %}
                 <tr>
-                    <td>
+                    <td data-label="Alumno">
                         <a href="{% url 'alumnos:detalle' a.alumno.pk %}" class="text-decoration-none">
                             {{ a.alumno.nombre }}
                         </a>
                     </td>
-                    <td>{{ a.alumno.get_disciplina_display }}</td>
-                    <td class="text-center">
+                    <td data-label="Disciplina">{{ a.alumno.get_disciplina_display }}</td>
+                    <td data-label="Estado">
                         {% if a.presente %}
                             <span class="badge bg-success">Presente</span>
                         {% else %}
                             <span class="badge bg-danger">Ausente</span>
                         {% endif %}
                     </td>
-                    <td class="text-muted small">{{ a.observacion|default:"—" }}</td>
+                    <td data-label="Observación" class="text-muted small">{{ a.observacion|default:"—" }}</td>
                 </tr>
                 {% endfor %}
             </tbody>

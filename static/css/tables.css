@@ -1,0 +1,42 @@
+/* ── Tablas responsive: se convierten en tarjetas en móvil ── */
+@media (max-width: 768px) {
+
+    .tabla-responsive thead {
+        display: none;
+    }
+
+    .tabla-responsive tbody tr {
+        display: block;
+        margin-bottom: 1rem;
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        overflow: hidden;
+        background: white;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    }
+
+    .tabla-responsive tbody td {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 14px;
+        border: none;
+        border-bottom: 1px solid #f0f0f0;
+        font-size: 0.9rem;
+    }
+
+    .tabla-responsive tbody td:last-child {
+        border-bottom: none;
+    }
+
+    .tabla-responsive tbody td::before {
+        content: attr(data-label);
+        font-weight: 600;
+        color: #6c757d;
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+        flex-shrink: 0;
+        margin-right: 12px;
+    }
+}

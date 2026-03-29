@@ -62,15 +62,22 @@
     <div class="card-body">
         {% if pagos %}
             <div class="table-responsive">
-                <table class="table table-sm mb-0">
-                    <thead><tr><th>Mes</th><th>Año</th><th>Monto</th><th>Fecha de pago</th></tr></thead>
+                <table class="table table-sm mb-0 tabla-responsive">
+                    <thead>
+                        <tr>
+                            <th>Mes</th>
+                            <th>Año</th>
+                            <th>Monto</th>
+                            <th>Fecha de pago</th>
+                        </tr>
+                    </thead>
                     <tbody>
                         {% for pago in pagos %}
                         <tr>
-                            <td>{{ pago.get_mes_display }}</td>
-                            <td>{{ pago.anio }}</td>
-                            <td>S/ {{ pago.monto }}</td>
-                            <td>{{ pago.fecha_pago }}</td>
+                            <td data-label="Mes">{{ pago.get_mes_display }}</td>
+                            <td data-label="Año">{{ pago.anio }}</td>
+                            <td data-label="Monto">S/ {{ pago.monto }}</td>
+                            <td data-label="Fecha de pago">{{ pago.fecha_pago|date:"d/m/Y" }}</td>
                         </tr>
                         {% endfor %}
                     </tbody>
