@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block titulo %}Dar de baja — Dojo Manager{% endblock %}
+
+{% block contenido %}
+
+<div class="row justify-content-center">
+    <div class="col-md-5 text-center">
+        <i class="bi bi-exclamation-triangle text-warning" style="font-size: 3rem;"></i>
+        <h3 class="mt-3">¿Dar de baja a {{ alumno.nombre }}?</h3>
+        <p class="text-muted">El alumno será marcado como inactivo. Sus registros de asistencia y pagos se conservan.</p>
+
+        <form method="POST" class="d-flex justify-content-center gap-3 mt-4">
+            {% csrf_token %}
+            <a href="{% url 'alumnos:lista' %}" class="btn btn-outline-secondary">Cancelar</a>
+            <button type="submit" class="btn btn-danger">Confirmar baja</button>
+        </form>
+    </div>
+</div>
+
+{% endblock %}

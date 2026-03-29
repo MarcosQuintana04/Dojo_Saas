@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar sesión — Dojo Manager</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #212529;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-4">
+
+            <!-- Logo / título -->
+            <div class="text-center mb-4">
+                <i class="bi bi-shield-fill text-primary" style="font-size: 3rem;"></i>
+                <h3 class="text-white mt-2">Dojo Manager</h3>
+                <p class="text-secondary">Iniciá sesión para continuar</p>
+            </div>
+
+            <div class="card shadow">
+                <div class="card-body p-4">
+
+                    <!-- El form apunta a sí mismo (action vacío = POST a la misma URL) -->
+                    <!-- Django's LoginView maneja el POST automáticamente -->
+                    <form method="POST">
+                        {% csrf_token %}
+
+                        <!-- "form" lo provee LoginView automáticamente -->
+                        <!-- Contiene los campos username y password -->
+                        {% if form.errors %}
+                            <div class="alert alert-danger py-2 small">
+                                Usuario o contraseña incorrectos.
+                            </div>
+                        {% endif %}
+
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Usuario</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-person"></i></span>
+                                <input type="text" name="username" class="form-control"
+                                       placeholder="Tu usuario" autofocus required>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold">Contraseña</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-lock"></i></span>
+                                <input type="password" name="password" class="form-control"
+                                       placeholder="Tu contraseña" required>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100">
+                            <i class="bi bi-box-arrow-in-right me-2"></i>Ingresar
+                        </button>
+
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+
+{% block titulo %}{{ alumno.nombre }} — Dojo Manager{% endblock %}
+
+{% block contenido %}
+
+<div class="d-flex justify-content-between align-items-start mb-4">
+    <div class="d-flex align-items-center">
+        <a href="{% url 'alumnos:lista' %}" class="btn btn-sm btn-outline-secondary me-3">
+            <i class="bi bi-arrow-left"></i>
+        </a>
+        <div>
+            <h2 class="mb-0">{{ alumno.nombre }}</h2>
+            <small class="text-muted">{{ alumno.get_disciplina_display }} · {{ alumno.get_cinturon_display }}</small>
+        </div>
+    </div>
+    <div class="d-flex gap-2">
+        <a href="{% url 'alumnos:editar' alumno.pk %}" class="btn btn-outline-secondary btn-sm">
+            <i class="bi bi-pencil me-1"></i> Editar
+        </a>
+        <a href="{% url 'alumnos:eliminar' alumno.pk %}" class="btn btn-outline-danger btn-sm">
+            <i class="bi bi-trash me-1"></i> Dar de baja
+        </a>
+    </div>
+</div>
+
+<!-- Info del alumno -->
+<div class="row g-3 mb-4">
+    <div class="col-md-6">
+        <div class="card shadow-sm h-100">
+            <div class="card-body">
+                <h6 class="card-title text-muted">Información personal</h6>
+                <p class="mb-1"><i class="bi bi-telephone me-2"></i>{{ alumno.telefono }}</p>
+                <p class="mb-1"><i class="bi bi-envelope me-2"></i>{{ alumno.email|default:"Sin email" }}</p>
+                <p class="mb-0"><i class="bi bi-calendar me-2"></i>Ingresó el {{ alumno.fecha_ingreso }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card shadow-sm h-100">
+            <div class="card-body">
+                <h6 class="card-title text-muted">Últimas asistencias</h6>
+                {% if asistencias %}
+                    {% for a in asistencias %}
+                        <span class="badge {% if a.presente %}bg-success{% else %}bg-danger{% endif %} me-1 mb-1">
+                            {{ a.fecha }}
+                        </span>
+                    {% endfor %}
+                {% else %}
+                    <p class="text-muted mb-0">Sin asistencias registradas.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Pagos -->
+<div class="card shadow-sm">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <span><i class="bi bi-cash me-2"></i>Historial de pagos</span>
+    </div>
+    <div class="card-body">
+        {% if pagos %}
+            <div class="table-responsive">
+                <table class="table table-sm mb-0">
+                    <thead><tr><th>Mes</th><th>Año</th><th>Monto</th><th>Fecha de pago</th></tr></thead>
+                    <tbody>
+                        {% for pago in pagos %}
+                        <tr>
+                            <td>{{ pago.get_mes_display }}</td>
+                            <td>{{ pago.anio }}</td>
+                            <td>S/ {{ pago.monto }}</td>
+                            <td>{{ pago.fecha_pago }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <p class="text-muted mb-0">Sin pagos registrados.</p>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}
