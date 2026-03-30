@@ -132,3 +132,7 @@ STATICFILES_DIRS = [BASE_DIR / 'static']
 
 # Dónde Django recopila todo para producción
 STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+# Le dice al navegador que SIEMPRE use HTTPS para este sitio
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
