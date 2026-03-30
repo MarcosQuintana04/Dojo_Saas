@@ -1,3 +1,5 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -23,8 +25,10 @@
 
             <!-- Logo / título -->
             <div class="text-center mb-4">
-                <i class="bi bi-shield-fill text-primary" style="font-size: 3rem;"></i>
-                <h3 class="text-white mt-2">Dojo Manager</h3>
+                <img src="{% static 'img/logo.png' %}" 
+                    alt="Berserker Ronin"
+                    style="height: 200px; object-fit: contain;">
+                <h3 class="text-white mt-3">Dojo Manager</h3>
                 <p class="text-secondary">Iniciá sesión para continuar</p>
             </div>
 

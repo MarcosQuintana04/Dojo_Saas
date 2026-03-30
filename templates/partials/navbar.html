@@ -1,9 +1,16 @@
 <!-- NAVBAR -->
 
+{% load static %}
+
 <nav class="navbar navbar-dark bg-dark px-3">
-    <span class="navbar-brand">
-        <i class="bi bi-shield-fill"></i> Dojo Manager
-    </span>
+    <a class="navbar-brand d-flex align-items-center gap-2 text-decoration-none" href="{% url 'alumnos:lista' %}">
+        <img src="{% static 'img/logo.png' %}" 
+             alt="Berserker Ronin" 
+             height="40"
+             style="object-fit: contain;">
+        <span>Dojo Manager</span>
+    </a>
+
     {% if user.is_authenticated %}
     <div class="d-flex align-items-center gap-3">
         <span class="text-secondary small">
