@@ -7,6 +7,9 @@ from .models import Alumno, Asistencia, Pago
 from .forms import AlumnoForm, AsistenciaForm, PagoForm  
 import datetime
 from django.db.models import Count
+from django.db.models import Sum
+from decimal import Decimal
+
 
 # ─────────────────────────────────────────
 # VISTA 1: Lista de alumnos
@@ -257,3 +260,70 @@ def historial_pagos(request, pk):
         'total_pagado': sum(p.monto for p in pagos),
     }
     return render(request, 'pagos/historial.html', contexto)
+
+# ─────────────────────────────────────────
+# DASHBOARD
+# ─────────────────────────────────────────
+
+@login_required
+def dashboard(request):
+    hoy = datetime.date.today()
+    mes_actual = hoy.month
+    anio_actual = hoy.year
+
+    # ── Métrica 1: Total alumnos activos ──
+    total_alumnos = Alumno.objects.filter(activo=True).count()
+
+    # ── Métrica 2: Deudores del mes ──
+    alumnos_que_pagaron = Pago.objects.filter(
+        mes=mes_actual,
+        anio=anio_actual
+    ).values_list('alumno_id', flat=True)
+
+    total_deudores = Alumno.objects.filter(
+        activo=True
+    ).exclude(
+        id__in=alumnos_que_pagaron
+    ).count()
+
+    # ── Métrica 3: Ingresos del mes actual ──
+    ingresos_mes = Pago.objects.filter(
+        mes=mes_actual,
+        anio=anio_actual
+    ).aggregate(total=Sum('monto'))['total'] or Decimal('0')
+
+    # ── Gráfico: Ingresos últimos 6 meses ──
+    # Construimos los últimos 6 meses hacia atrás desde hoy
+    meses_labels = []
+    meses_ingresos = []
+
+    for i in range(5, -1, -1):
+        # Calculamos el mes retrocediendo i meses desde hoy
+        if mes_actual - i <= 0:
+            mes = mes_actual - i + 12
+            anio = anio_actual - 1
+        else:
+            mes = mes_actual - i
+            anio = anio_actual
+
+        # Nombre corto del mes
+        nombre_mes = datetime.date(anio, mes, 1).strftime('%b %Y')
+        meses_labels.append(nombre_mes)
+
+        # Ingresos de ese mes
+        total = Pago.objects.filter(
+            mes=mes,
+            anio=anio
+        ).aggregate(total=Sum('monto'))['total'] or Decimal('0')
+
+        meses_ingresos.append(float(total))
+
+    contexto = {
+        'total_alumnos': total_alumnos,
+        'total_deudores': total_deudores,
+        'ingresos_mes': ingresos_mes,
+        'meses_labels': meses_labels,
+        'meses_ingresos': meses_ingresos,
+        'mes_actual': hoy.strftime('%B %Y'),
+    }
+    return render(request, 'dashboard/index.html', contexto)

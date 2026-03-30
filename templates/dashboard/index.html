@@ -1,0 +1,149 @@
+{% extends 'base.html' %}
+
+{% block titulo %}Dashboard — Berserker Ronin{% endblock %}
+
+{% block estilos_extra %}
+<style>
+    .metrica-card {
+        border-radius: 12px;
+        border: none;
+        transition: transform 0.2s;
+    }
+    .metrica-card:hover {
+        transform: translateY(-3px);
+    }
+    .metrica-numero {
+        font-size: 2.5rem;
+        font-weight: 700;
+        line-height: 1;
+    }
+    .metrica-label {
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+</style>
+{% endblock %}
+
+{% block contenido %}
+
+<!-- Encabezado -->
+<div class="mb-4">
+    <h2 class="mb-0">Dashboard</h2>
+    <small class="text-muted">{{ mes_actual }}</small>
+</div>
+
+<!-- Tarjetas de métricas -->
+<div class="row g-3 mb-4">
+
+    <!-- Alumnos activos -->
+    <div class="col-md-4">
+        <div class="card metrica-card shadow-sm h-100" style="border-left: 4px solid #0d6efd !important;">
+            <div class="card-body d-flex align-items-center gap-3 p-4">
+                <div class="rounded-circle bg-primary bg-opacity-10 d-flex align-items-center justify-content-center"
+                     style="width:56px; height:56px; flex-shrink:0;">
+                    <i class="bi bi-people-fill text-primary" style="font-size:1.5rem;"></i>
+                </div>
+                <div>
+                    <div class="metrica-numero text-primary">{{ total_alumnos }}</div>
+                    <div class="metrica-label text-muted">Alumnos activos</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Deudores -->
+    <div class="col-md-4">
+        <div class="card metrica-card shadow-sm h-100" style="border-left: 4px solid #dc3545 !important;">
+            <div class="card-body d-flex align-items-center gap-3 p-4">
+                <div class="rounded-circle bg-danger bg-opacity-10 d-flex align-items-center justify-content-center"
+                     style="width:56px; height:56px; flex-shrink:0;">
+                    <i class="bi bi-exclamation-circle-fill text-danger" style="font-size:1.5rem;"></i>
+                </div>
+                <div>
+                    <div class="metrica-numero text-danger">{{ total_deudores }}</div>
+                    <div class="metrica-label text-muted">Deben este mes</div>
+                    <a href="{% url 'alumnos:deudores' %}" class="small text-decoration-none">Ver detalle →</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Ingresos -->
+    <div class="col-md-4">
+        <div class="card metrica-card shadow-sm h-100" style="border-left: 4px solid #198754 !important;">
+            <div class="card-body d-flex align-items-center gap-3 p-4">
+                <div class="rounded-circle bg-success bg-opacity-10 d-flex align-items-center justify-content-center"
+                     style="width:56px; height:56px; flex-shrink:0;">
+                    <i class="bi bi-cash-stack text-success" style="font-size:1.5rem;"></i>
+                </div>
+                <div>
+                    <div class="metrica-numero text-success">S/ {{ ingresos_mes }}</div>
+                    <div class="metrica-label text-muted">Ingresos del mes</div>
+                    <a href="{% url 'alumnos:deudores' %}" class="small text-decoration-none">Ver pagos →</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- Gráfico -->
+<div class="card shadow-sm">
+    <div class="card-header">
+        <i class="bi bi-bar-chart-fill me-2"></i>Ingresos — últimos 6 meses
+    </div>
+    <div class="card-body p-4">
+        <canvas id="graficoIngresos" height="100"></canvas>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scripts_extra %}
+<!-- Chart.js — librería de gráficos -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script>
+    // Django pasa los datos como listas de Python.
+    // Las convertimos a JSON para que JavaScript las entienda.
+    const labels = {{ meses_labels|safe }};
+    const ingresos = {{ meses_ingresos|safe }};
+
+    const ctx = document.getElementById('graficoIngresos').getContext('2d');
+
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Ingresos (S/)',
+                data: ingresos,
+                backgroundColor: 'rgba(25, 135, 84, 0.2)',
+                borderColor: 'rgba(25, 135, 84, 1)',
+                borderWidth: 2,
+                borderRadius: 6,
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    callbacks: {
+                        // Formato del tooltip al pasar el mouse
+                        label: (context) => ` S/ ${context.parsed.y.toFixed(2)}`
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        callback: (value) => `S/ ${value}`
+                    }
+                }
+            }
+        }
+    });
+</script>
+{% endblock %}

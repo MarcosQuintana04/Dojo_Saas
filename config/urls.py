@@ -26,7 +26,7 @@ urlpatterns = [
     
     # Todo lo que empiece con "alumnos/" se lo delegamos a la app alumnos
     path('alumnos/', include('alumnos.urls', namespace='alumnos')),
-    path('', RedirectView.as_view(url='/alumnos/')),
+    path('', RedirectView.as_view(url='/alumnos/dashboard/')),
     
     # Vistas de autenticación incluidas en Django
     path('login/', auth_views.LoginView.as_view(template_name='auth/login.html'), name='login'),

@@ -26,4 +26,7 @@ urlpatterns = [
     path('pagos/deudores/',         views.deudores,           name='deudores'),
     path('pagos/nuevo/',            views.registrar_pago,     name='registrar_pago'),
     path('pagos/<int:pk>/',         views.historial_pagos,    name='historial_pagos'),
+    
+    # ── Dashboard ────────────────────────────────
+    path('dashboard/', views.dashboard, name='dashboard'),
 ]
