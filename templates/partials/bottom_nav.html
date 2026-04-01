@@ -1,30 +1,40 @@
+{% load static %}
 <nav class="d-md-none fixed-bottom navbar navbar-light bg-white border-top px-0">
     <div class="container-fluid justify-content-around">
-        
-        <a href="{% url 'alumnos:dashboard' %}"
-            class="d-flex flex-column align-items-center text-decoration-none py-2 px-3
-            {% if request.resolver_match.url_name == 'dashboard' %}text-primary{% else %}text-secondary{% endif %}">
+
+        <a href="{% url 'dashboard:index' %}"
+           class="d-flex flex-column align-items-center text-decoration-none py-2 px-3
+           {% if request.resolver_match.url_name == 'index' %}text-primary{% else %}text-secondary{% endif %}">
             <i class="bi bi-speedometer2" style="font-size: 1.4rem;"></i>
             <small style="font-size: 0.65rem;">Inicio</small>
         </a>
 
         <a href="{% url 'alumnos:lista' %}"
            class="d-flex flex-column align-items-center text-decoration-none py-2 px-3
-            {% if request.resolver_match.url_name == 'lista' or request.resolver_match.url_name == 'detalle' %}text-primary{% else %}text-secondary{% endif %}">
+           {% if request.resolver_match.url_name == 'lista' or request.resolver_match.url_name == 'detalle' %}text-primary{% else %}text-secondary{% endif %}">
             <i class="bi bi-people-fill" style="font-size: 1.4rem;"></i>
             <small style="font-size: 0.65rem;">Alumnos</small>
         </a>
 
-        <a href="{% url 'alumnos:asistencias_hoy' %}"
+        <a href="{% url 'asistencias:registrar' %}"
+           class="d-flex flex-column align-items-center text-decoration-none py-2 px-3">
+            <span class="bg-primary rounded-circle d-flex align-items-center justify-content-center mb-1"
+                  style="width:42px; height:42px; margin-top:-16px;">
+                <i class="bi bi-plus-lg text-white" style="font-size: 1.2rem;"></i>
+            </span>
+            <small style="font-size: 0.65rem; color: #6c757d;">Asistencia</small>
+        </a>
+
+        <a href="{% url 'asistencias:hoy' %}"
            class="d-flex flex-column align-items-center text-decoration-none py-2 px-3
-            {% if 'asistencia' in request.resolver_match.url_name %}text-primary{% else %}text-secondary{% endif %}">
+           {% if 'asistencia' in request.resolver_match.url_name %}text-primary{% else %}text-secondary{% endif %}">
             <i class="bi bi-calendar-check" style="font-size: 1.4rem;"></i>
             <small style="font-size: 0.65rem;">Asistencias</small>
         </a>
 
-        <a href="{% url 'alumnos:deudores' %}"
+        <a href="{% url 'pagos:deudores' %}"
            class="d-flex flex-column align-items-center text-decoration-none py-2 px-3
-            {% if 'pago' in request.resolver_match.url_name or request.resolver_match.url_name == 'deudores' %}text-primary{% else %}text-secondary{% endif %}">
+           {% if request.resolver_match.app_name == 'pagos' %}text-primary{% else %}text-secondary{% endif %}">
             <i class="bi bi-cash-stack" style="font-size: 1.4rem;"></i>
             <small style="font-size: 0.65rem;">Pagos</small>
         </a>

@@ -13,7 +13,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'alumnos',
+    'apps.alumnos',
+    'apps.asistencias',
+    'apps.pagos',
+    'apps.dashboard',
 ]
 
 MIDDLEWARE = [
@@ -71,7 +74,7 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
-LOGIN_REDIRECT_URL = '/alumnos/'
+LOGIN_REDIRECT_URL = '/dashboard/'
 LOGIN_URL = '/login/'
 LOGOUT_REDIRECT_URL = '/login/'
 

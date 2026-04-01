@@ -63,7 +63,7 @@
                 <div>
                     <div class="metrica-numero text-danger">{{ total_deudores }}</div>
                     <div class="metrica-label text-muted">Deben este mes</div>
-                    <a href="{% url 'alumnos:deudores' %}" class="small text-decoration-none">Ver detalle →</a>
+                    <a href="{% url 'pagos:deudores' %}" class="small text-decoration-none">Ver detalle →</a>
                 </div>
             </div>
         </div>
@@ -80,7 +80,7 @@
                 <div>
                     <div class="metrica-numero text-success">S/ {{ ingresos_mes }}</div>
                     <div class="metrica-label text-muted">Ingresos del mes</div>
-                    <a href="{% url 'alumnos:deudores' %}" class="small text-decoration-none">Ver pagos →</a>
+                    <a href="{% url 'pagos:deudores' %}" class="small text-decoration-none">Ver pagos →</a>
                 </div>
             </div>
         </div>
