@@ -13,6 +13,10 @@
         class="{% if 'asistencia' in request.resolver_match.url_name %}active{% endif %}">
         <i class="bi bi-calendar-check me-2"></i> Asistencias
     </a>
+    <a href="{% url 'horarios:semanal' %}"
+        class="{% if request.resolver_match.app_name == 'horarios' %}active{% endif %}">
+        <i class="bi bi-calendar-week me-2"></i> Horarios
+    </a>
     <a href="{% url 'pagos:deudores' %}"
         class="{% if 'pago' in request.resolver_match.url_name or request.resolver_match.url_name == 'deudores' %}active{% endif %}">
         <i class="bi bi-cash-stack me-2"></i> Pagos

@@ -17,6 +17,7 @@ INSTALLED_APPS = [
     'apps.asistencias',
     'apps.pagos',
     'apps.dashboard',
+    'apps.horarios',
 ]
 
 MIDDLEWARE = [

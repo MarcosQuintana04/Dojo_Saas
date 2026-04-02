@@ -12,4 +12,5 @@ urlpatterns = [
     path('asistencias/', include('apps.asistencias.urls', namespace='asistencias')),
     path('pagos/',       include('apps.pagos.urls',       namespace='pagos')),
     path('dashboard/',   include('apps.dashboard.urls',   namespace='dashboard')),
+    path('horarios/',    include('apps.horarios.urls',    namespace='horarios')),
 ]

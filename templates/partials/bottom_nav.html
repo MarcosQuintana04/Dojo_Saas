@@ -16,13 +16,13 @@
             <small style="font-size: 0.65rem;">Alumnos</small>
         </a>
 
-        <a href="{% url 'asistencias:registrar' %}"
+        <a href="{% url 'horarios:semanal' %}"
            class="d-flex flex-column align-items-center text-decoration-none py-2 px-3">
             <span class="bg-primary rounded-circle d-flex align-items-center justify-content-center mb-1"
                   style="width:42px; height:42px; margin-top:-16px;">
-                <i class="bi bi-plus-lg text-white" style="font-size: 1.2rem;"></i>
+                <i class="bi bi-calendar-week text-white" style="font-size: 1.2rem;"></i>
             </span>
-            <small style="font-size: 0.65rem; color: #6c757d;">Asistencia</small>
+            <small style="font-size: 0.65rem; color: #6c757d;">Horarios</small>
         </a>
 
         <a href="{% url 'asistencias:hoy' %}"
@@ -31,6 +31,7 @@
             <i class="bi bi-calendar-check" style="font-size: 1.4rem;"></i>
             <small style="font-size: 0.65rem;">Asistencias</small>
         </a>
+        
 
         <a href="{% url 'pagos:deudores' %}"
            class="d-flex flex-column align-items-center text-decoration-none py-2 px-3
