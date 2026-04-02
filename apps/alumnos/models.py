@@ -37,6 +37,11 @@ class Alumno(models.Model):
     cinturon     = models.CharField(max_length=20, choices=CINTURON_CHOICES)
     fecha_ingreso = models.DateField()
     activo       = models.BooleanField(default=True)
+    foto = models.ImageField(
+        upload_to='alumnos/fotos/',  # subcarpeta dentro de media/
+        blank=True,
+        null=True
+    )
 
     def __str__(self):
         return f"{self.nombre} ({self.get_disciplina_display()})"

@@ -59,7 +59,7 @@ def crear_alumno(request):
 
     if request.method == 'POST':
         # Creamos el form con los datos que envió el usuario
-        form = AlumnoForm(request.POST)
+        form = AlumnoForm(request.POST, request.FILES)
 
         if form.is_valid():
             # is_valid() valida automáticamente todos los campos
@@ -84,7 +84,7 @@ def editar_alumno(request, pk):
     if request.method == 'POST':
         # La diferencia con crear: le pasamos "instance=alumno"
         # para que Django sepa que está MODIFICANDO, no creando
-        form = AlumnoForm(request.POST, instance=alumno)
+        form = AlumnoForm(request.POST, request.FILES, instance=alumno)
         if form.is_valid():
             form.save()
             messages.success(request, 'Alumno actualizado correctamente.')

@@ -17,6 +17,13 @@ class PagoForm(forms.ModelForm):
             'mes':        forms.Select(attrs={'class': 'form-select'}),
             'anio':       forms.NumberInput(attrs={'class': 'form-control'}),
         }
+        labels = {
+            'alumno':     'Alumno',
+            'monto':      'Monto (S/)',
+            'fecha_pago': 'Fecha de pago',
+            'mes':        'Mes',
+            'anio':       'Año',
+        }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

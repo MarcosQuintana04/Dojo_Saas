@@ -16,6 +16,12 @@ class AsistenciaForm(forms.ModelForm):
             'presente':    forms.CheckboxInput(attrs={'class': 'form-check-input'}),
             'observacion': forms.Textarea(attrs={'class': 'form-control', 'rows': 2}),
         }
+        labels = {
+            'alumno':      'Alumno',
+            'fecha':       'Fecha',
+            'presente':    '¿Presente?',
+            'observacion': 'Observación',
+        }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
