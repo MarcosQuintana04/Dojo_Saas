@@ -11,16 +11,42 @@ from .forms import AlumnoForm
 # ─────────────────────────────────────────
 @login_required
 def lista_alumnos(request):
-    # El ORM de Django: Alumno.objects.all() genera
-    # SELECT * FROM alumnos_alumno ORDER BY nombre
-    # (el ORDER BY viene del Meta.ordering que definimos en el modelo)
+    # Empezamos con todos los alumnos activos
     alumnos = Alumno.objects.filter(activo=True)
 
-    # Pasamos los datos al template dentro de un diccionario
-    # llamado "contexto". El template puede acceder a cada clave.
+    # Leemos los parámetros de la URL
+    # request.GET es un diccionario con los parámetros ?clave=valor
+    busqueda   = request.GET.get('q', '').strip()
+    disciplina = request.GET.get('disciplina', '')
+    cinturon   = request.GET.get('cinturon', '')
+
+    # Aplicamos filtros dinámicamente solo si tienen valor
+    if busqueda:
+        # icontains = contiene el texto, sin importar mayúsculas/minúsculas
+        # El doble guión bajo __ navega relaciones y aplica lookups
+        alumnos = alumnos.filter(nombre__icontains=busqueda)
+
+    if disciplina:
+        alumnos = alumnos.filter(disciplina=disciplina)
+
+    if cinturon:
+        alumnos = alumnos.filter(cinturon=cinturon)
+
+    # Total sin filtros (para mostrar "X de Y alumnos")
+    total_sin_filtros = Alumno.objects.filter(activo=True).count()
+
     contexto = {
-        'alumnos': alumnos,
-        'total': alumnos.count(),
+        'alumnos':          alumnos,
+        'total':            alumnos.count(),
+        'total_sin_filtros': total_sin_filtros,
+        # Devolvemos los valores actuales para mantener el estado del form
+        'busqueda':         busqueda,
+        'disciplina':       disciplina,
+        'cinturon':         cinturon,
+        # Las opciones para los selectores — vienen del modelo
+        'disciplinas':      Alumno.DISCIPLINA_CHOICES,
+        'cinturones':       Alumno.CINTURON_CHOICES,
+        'hay_filtros':      any([busqueda, disciplina, cinturon]),
     }
     return render(request, 'alumnos/lista.html', contexto)
 

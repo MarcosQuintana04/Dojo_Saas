@@ -1,17 +1,24 @@
 {% extends 'base.html' %}
+{% load static %}
 
-{% block titulo %}Alumnos — Dojo Manager{% endblock %}
+{% block titulo %}Alumnos — Berserker Ronin{% endblock %}
 
 {% block contenido %}
 
 <div class="d-flex justify-content-between align-items-center mb-4">
     <div>
         <h2 class="mb-0">Alumnos</h2>
-        <small class="text-muted">{{ total }} alumno{{ total|pluralize }} activo{{ total|pluralize }}</small>
+        <small class="text-muted">
+            {% if hay_filtros %}
+                {{ total }} de {{ total_sin_filtros }} alumno{{ total_sin_filtros|pluralize }}
+            {% else %}
+                {{ total }} alumno{{ total|pluralize }} activo{{ total|pluralize }}
+            {% endif %}
+        </small>
     </div>
     <div class="d-flex gap-2">
         <a href="{% url 'reportes:alumnos' %}" class="btn btn-outline-secondary">
-            <i class="bi bi-file-pdf me-1"></i> Exportar PDF
+            <i class="bi bi-file-pdf me-1"></i> PDF
         </a>
         <a href="{% url 'alumnos:crear' %}" class="btn btn-primary">
             <i class="bi bi-plus-lg me-1"></i> Nuevo alumno
@@ -19,6 +26,73 @@
     </div>
 </div>
 
+<!-- Barra de búsqueda y filtros -->
+<!-- El form usa GET para que los filtros queden en la URL -->
+<form method="GET" action="{% url 'alumnos:lista' %}" class="card shadow-sm mb-4">
+    <div class="card-body">
+        <div class="row g-3 align-items-end">
+
+            <!-- Búsqueda por nombre -->
+            <div class="col-md-4">
+                <label class="form-label fw-semibold small text-muted">
+                    <i class="bi bi-search me-1"></i>Buscar
+                </label>
+                <input
+                    type="text"
+                    name="q"
+                    class="form-control"
+                    placeholder="Nombre del alumno..."
+                    value="{{ busqueda }}"
+                    autocomplete="off"
+                >
+            </div>
+
+            <!-- Filtro disciplina -->
+            <div class="col-md-3">
+                <label class="form-label fw-semibold small text-muted">Disciplina</label>
+                <select name="disciplina" class="form-select">
+                    <option value="">Todas</option>
+                    {% for valor, etiqueta in disciplinas %}
+                        <option value="{{ valor }}"
+                            {% if valor == disciplina %}selected{% endif %}>
+                            {{ etiqueta }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <!-- Filtro cinturón -->
+            <div class="col-md-3">
+                <label class="form-label fw-semibold small text-muted">Cinturón</label>
+                <select name="cinturon" class="form-select">
+                    <option value="">Todos</option>
+                    {% for valor, etiqueta in cinturones %}
+                        <option value="{{ valor }}"
+                            {% if valor == cinturon %}selected{% endif %}>
+                            {{ etiqueta }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <!-- Botones -->
+            <div class="col-md-2 d-flex gap-2">
+                <button type="submit" class="btn btn-primary flex-grow-1">
+                    <i class="bi bi-search"></i>
+                </button>
+                {% if hay_filtros %}
+                <a href="{% url 'alumnos:lista' %}" class="btn btn-outline-secondary"
+                   title="Limpiar filtros">
+                    <i class="bi bi-x-lg"></i>
+                </a>
+                {% endif %}
+            </div>
+
+        </div>
+    </div>
+</form>
+
+<!-- Resultados -->
 {% if alumnos %}
 <div class="card shadow-sm">
     <div class="table-responsive">
@@ -36,21 +110,22 @@
             <tbody>
                 {% for alumno in alumnos %}
                 <tr>
-                    <td data-label="Foto">
+                    <td data-label="">
                         {% if alumno.foto %}
                             <img src="{{ alumno.foto.url }}"
-                                alt="{{ alumno.nombre }}"
-                                class="rounded-circle"
-                                style="width: 36px; height: 36px; object-fit: cover;">
+                                 alt="{{ alumno.nombre }}"
+                                 class="rounded-circle"
+                                 style="width:36px; height:36px; object-fit:cover;">
                         {% else %}
                             <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center"
-                                style="width: 36px; height: 36px;">
+                                 style="width:36px; height:36px;">
                                 <i class="bi bi-person-fill text-white small"></i>
                             </div>
                         {% endif %}
                     </td>
                     <td data-label="Nombre">
-                        <a href="{% url 'alumnos:detalle' alumno.pk %}" class="text-decoration-none fw-semibold">
+                        <a href="{% url 'alumnos:detalle' alumno.pk %}"
+                           class="text-decoration-none fw-semibold">
                             {{ alumno.nombre }}
                         </a>
                     </td>
@@ -58,10 +133,12 @@
                     <td data-label="Cinturón">{{ alumno.get_cinturon_display }}</td>
                     <td data-label="Teléfono">{{ alumno.telefono }}</td>
                     <td data-label="Acciones" class="text-center">
-                        <a href="{% url 'alumnos:editar' alumno.pk %}" class="btn btn-sm btn-outline-secondary me-1">
+                        <a href="{% url 'alumnos:editar' alumno.pk %}"
+                           class="btn btn-sm btn-outline-secondary me-1">
                             <i class="bi bi-pencil"></i>
                         </a>
-                        <a href="{% url 'alumnos:eliminar' alumno.pk %}" class="btn btn-sm btn-outline-danger">
+                        <a href="{% url 'alumnos:eliminar' alumno.pk %}"
+                           class="btn btn-sm btn-outline-danger">
                             <i class="bi bi-trash"></i>
                         </a>
                     </td>
@@ -73,10 +150,21 @@
 </div>
 
 {% else %}
+<!-- Sin resultados -->
 <div class="text-center py-5 text-muted">
-    <i class="bi bi-people" style="font-size: 3rem;"></i>
-    <p class="mt-3">No hay alumnos registrados todavía.</p>
-    <a href="{% url 'alumnos:crear' %}" class="btn btn-primary">Registrar primer alumno</a>
+    {% if hay_filtros %}
+        <i class="bi bi-search" style="font-size: 3rem;"></i>
+        <p class="mt-3">No se encontraron alumnos con esos filtros.</p>
+        <a href="{% url 'alumnos:lista' %}" class="btn btn-outline-secondary btn-sm">
+            <i class="bi bi-x-lg me-1"></i> Limpiar filtros
+        </a>
+    {% else %}
+        <i class="bi bi-people" style="font-size: 3rem;"></i>
+        <p class="mt-3">No hay alumnos registrados todavía.</p>
+        <a href="{% url 'alumnos:crear' %}" class="btn btn-primary">
+            Registrar primer alumno
+        </a>
+    {% endif %}
 </div>
 {% endif %}
 

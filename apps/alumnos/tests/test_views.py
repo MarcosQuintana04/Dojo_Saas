@@ -84,3 +84,82 @@ class AlumnoViewsCRUDTest(BaseTestCase):
         self.client.post(reverse('alumnos:eliminar', args=[self.alumno.pk]))
         self.alumno.refresh_from_db()  # recargar desde la BD
         self.assertFalse(self.alumno.activo)
+        
+class AlumnoBusquedaTest(BaseTestCase):
+
+    def setUp(self):
+        super().setUp()
+        # El setUp del padre ya creó self.alumno (Juan Pérez, karate)
+        # Creamos alumnos adicionales para testear filtros
+        from apps.alumnos.models import Alumno
+        import datetime
+        self.alumno_mma = Alumno.objects.create(
+            nombre='Ana García',
+            edad=22,
+            telefono='111222333',
+            disciplina='mma',
+            cinturon='principiante',
+            fecha_ingreso=datetime.date.today(),
+        )
+        self.alumno_verde = Alumno.objects.create(
+            nombre='Luis Torres',
+            edad=30,
+            telefono='444555666',
+            disciplina='karate',
+            cinturon='verde',
+            fecha_ingreso=datetime.date.today(),
+        )
+
+    def test_busqueda_por_nombre_parcial(self):
+        """Buscar 'juan' debe encontrar 'Juan Pérez'."""
+        self.login()
+        response = self.client.get(reverse('alumnos:lista') + '?q=juan')
+        alumnos = response.context['alumnos']
+        self.assertEqual(alumnos.count(), 1)
+        self.assertEqual(alumnos.first().nombre, 'Juan Pérez')
+
+    def test_busqueda_insensible_a_mayusculas(self):
+        """Buscar 'JUAN' debe encontrar 'Juan Pérez'."""
+        self.login()
+        response = self.client.get(reverse('alumnos:lista') + '?q=JUAN')
+        self.assertEqual(response.context['alumnos'].count(), 1)
+
+    def test_filtro_por_disciplina(self):
+        """Filtrar por MMA debe devolver solo alumnos de MMA."""
+        self.login()
+        response = self.client.get(reverse('alumnos:lista') + '?disciplina=mma')
+        alumnos = response.context['alumnos']
+        self.assertEqual(alumnos.count(), 1)
+        self.assertEqual(alumnos.first().nombre, 'Ana García')
+
+    def test_filtro_por_cinturon(self):
+        """Filtrar por verde debe devolver solo alumnos con cinturón verde."""
+        self.login()
+        response = self.client.get(reverse('alumnos:lista') + '?cinturon=verde')
+        alumnos = response.context['alumnos']
+        self.assertEqual(alumnos.count(), 1)
+        self.assertEqual(alumnos.first().nombre, 'Luis Torres')
+
+    def test_filtros_combinados(self):
+        """Combinar disciplina y cinturón debe funcionar correctamente."""
+        self.login()
+        response = self.client.get(
+            reverse('alumnos:lista') + '?disciplina=karate&cinturon=blanco'
+        )
+        alumnos = response.context['alumnos']
+        self.assertEqual(alumnos.count(), 1)
+        self.assertEqual(alumnos.first().nombre, 'Juan Pérez')
+
+    def test_sin_resultados_muestra_mensaje(self):
+        """Una búsqueda sin resultados debe mostrar el estado vacío."""
+        self.login()
+        response = self.client.get(reverse('alumnos:lista') + '?q=xyzxyzxyz')
+        self.assertEqual(response.context['alumnos'].count(), 0)
+        self.assertTrue(response.context['hay_filtros'])
+
+    def test_limpiar_filtros_devuelve_todos(self):
+        """Sin parámetros en la URL deben aparecer todos los alumnos activos."""
+        self.login()
+        response = self.client.get(reverse('alumnos:lista'))
+        self.assertEqual(response.context['alumnos'].count(), 3)
+        self.assertFalse(response.context['hay_filtros'])
