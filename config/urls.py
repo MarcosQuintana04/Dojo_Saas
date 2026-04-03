@@ -15,4 +15,5 @@ urlpatterns = [
     path('pagos/',       include('apps.pagos.urls',       namespace='pagos')),
     path('dashboard/',   include('apps.dashboard.urls',   namespace='dashboard')),
     path('horarios/',    include('apps.horarios.urls',    namespace='horarios')),
+    path('reportes/',    include('apps.reportes.urls',    namespace='reportes')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -33,7 +33,13 @@
         </div>
     </div>
 
-    <div class="d-flex gap-2">
+    <div class="d-flex gap-2 flex-wrap">
+        <a href="{% url 'reportes:pagos_alumno' alumno.pk %}" class="btn btn-outline-secondary btn-sm">
+            <i class="bi bi-file-pdf me-1"></i> PDF Pagos
+        </a>
+        <a href="{% url 'reportes:asistencias_alumno' alumno.pk %}" class="btn btn-outline-secondary btn-sm">
+            <i class="bi bi-file-pdf me-1"></i> PDF Asistencias
+        </a>
         <a href="{% url 'alumnos:editar' alumno.pk %}" class="btn btn-outline-secondary btn-sm">
             <i class="bi bi-pencil me-1"></i> Editar
         </a>

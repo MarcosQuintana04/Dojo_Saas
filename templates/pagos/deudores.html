@@ -8,9 +8,14 @@
         <h2 class="mb-0">Estado de pagos</h2>
         <small class="text-muted">{{ mes }}</small>
     </div>
-    <a href="{% url 'pagos:registrar' %}" class="btn btn-success">
-        <i class="bi bi-plus-lg me-1"></i> Registrar pago
-    </a>
+    <div class="d-flex gap-2">
+        <a href="{% url 'reportes:deudores' %}" class="btn btn-outline-secondary">
+            <i class="bi bi-file-pdf me-1"></i> Exportar PDF
+        </a>
+        <a href="{% url 'pagos:registrar' %}" class="btn btn-success">
+            <i class="bi bi-plus-lg me-1"></i> Registrar pago
+        </a>
+    </div>
 </div>
 
 <div class="row g-4">

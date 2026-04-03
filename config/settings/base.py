@@ -18,6 +18,7 @@ INSTALLED_APPS = [
     'apps.pagos',
     'apps.dashboard',
     'apps.horarios',
+    'apps.reportes',
 ]
 
 MIDDLEWARE = [
