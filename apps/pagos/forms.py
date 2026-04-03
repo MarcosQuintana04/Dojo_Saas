@@ -25,6 +25,12 @@ class PagoForm(forms.ModelForm):
             'anio':       'Año',
         }
 
+    def clean_monto(self):
+        monto = self.cleaned_data.get('monto')
+        if monto is not None and monto < 0:
+            raise forms.ValidationError('El monto debe ser mayor o igual a cero.')
+        return monto
+    
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['alumno'].queryset = Alumno.objects.filter(activo=True)
