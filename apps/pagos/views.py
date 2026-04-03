@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 from apps.alumnos.models import Alumno
 from .models import Pago
 from .forms import PagoForm
+import urllib.parse 
 
 
 @login_required
@@ -27,6 +28,8 @@ def registrar_pago(request):
 @login_required
 def deudores(request):
     hoy = datetime.date.today()
+    mes_nombre = hoy.strftime('%B %Y').capitalize()
+
     alumnos_que_pagaron = Pago.objects.filter(
         mes=hoy.month,
         anio=hoy.year
@@ -41,10 +44,38 @@ def deudores(request):
         id__in=alumnos_que_pagaron
     )
 
+    # Generamos el link de WhatsApp para cada deudor
+    deudores_con_link = []
+    for alumno in deudores:
+        mensaje = (
+            f'Hola {alumno.nombre.split()[0]} \U0001F44B\n\n'
+            f'Te recordamos que tienes pendiente el pago '
+            f'de *{mes_nombre}* en *Berserker Ronin*.\n'
+            f'Por favor, acércate a regularizar tu situación.\n\n'
+            f'*Este es un mensaje automatizado, si ya realizó el pago '
+            f'o no continúa en la academia, ignore el mensaje.*\n\n'
+            f'¡Gracias! \U0001F94B'
+        )
+        
+        numero = alumno.telefono.strip().replace(' ', '')
+        # Aseguramos que tenga código de país
+        if not numero.startswith('+'):
+            numero = f'51{numero}'  # código de Perú
+        else:
+            numero = numero.replace('+', '')
+            
+        mensaje_encoded = urllib.parse.quote(mensaje, safe='')
+        link = f'https://wa.me/{numero}?text={mensaje_encoded}'
+        
+        deudores_con_link.append({
+            'alumno': alumno,
+            'link_whatsapp': link,
+        })
+
     contexto = {
-        'deudores': deudores,
+        'deudores_con_link': deudores_con_link,
         'al_dia': al_dia,
-        'mes': hoy.strftime('%B %Y'),
+        'mes': mes_nombre,
         'total_deudores': deudores.count(),
         'total_al_dia': al_dia.count(),
     }
