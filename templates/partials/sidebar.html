@@ -1,3 +1,4 @@
+{% load static %}
 <!-- SIDEBAR -->
 
 <div class="col-md-2 sidebar d-none d-md-block pt-3">
@@ -20,6 +21,10 @@
     <a href="{% url 'pagos:deudores' %}"
         class="{% if 'pago' in request.resolver_match.url_name or request.resolver_match.url_name == 'deudores' %}active{% endif %}">
         <i class="bi bi-cash-stack me-2"></i> Pagos
+    </a>
+    <a href="{% url 'portal_admin:lista_cuentas' %}"
+        class="{% if request.resolver_match.app_name == 'portal_admin' %}active{% endif %}">
+        <i class="bi bi-person-badge me-2"></i> Portal alumnos
     </a>
     <a href="{% url 'configuracion:panel' %}"
         class="{% if request.resolver_match.app_name == 'configuracion' %}active{% endif %}">

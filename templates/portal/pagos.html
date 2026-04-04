@@ -1,0 +1,60 @@
+{% extends 'portal/base_portal.html' %}
+{% block titulo %}Pagos — Portal Berserker Ronin{% endblock %}
+
+{% block contenido %}
+
+<h4 class="mb-4">Mis pagos</h4>
+
+<!-- Estado mes actual -->
+<div class="card shadow-sm mb-4
+    {% if pago_mes_actual %}border-success{% else %}border-danger{% endif %}">
+    <div class="card-body d-flex align-items-center gap-3">
+        {% if pago_mes_actual %}
+            <i class="bi bi-check-circle-fill text-success" style="font-size: 2rem;"></i>
+            <div>
+                <div class="fw-semibold">{{ mes_actual }} — Pagado</div>
+                <small class="text-muted">
+                    S/ {{ pago_mes_actual.monto }} el {{ pago_mes_actual.fecha_pago|date:"d/m/Y" }}
+                </small>
+            </div>
+        {% else %}
+            <i class="bi bi-exclamation-circle-fill text-danger" style="font-size: 2rem;"></i>
+            <div>
+                <div class="fw-semibold text-danger">{{ mes_actual }} — Pendiente</div>
+                <small class="text-muted">Acércate a regularizar tu pago</small>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Historial -->
+<div class="card shadow-sm">
+    <div class="card-header d-flex justify-content-between">
+        <span><i class="bi bi-clock-history me-2"></i>Historial</span>
+        <span class="text-muted small">Total: S/ {{ total_pagado }}</span>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-hover mb-0 tabla-responsive">
+            <thead class="table-dark">
+                <tr>
+                    <th>Mes</th>
+                    <th>Año</th>
+                    <th>Monto</th>
+                    <th>Fecha</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for pago in pagos %}
+                <tr>
+                    <td data-label="Mes">{{ pago.get_mes_display }}</td>
+                    <td data-label="Año">{{ pago.anio }}</td>
+                    <td data-label="Monto">S/ {{ pago.monto }}</td>
+                    <td data-label="Fecha">{{ pago.fecha_pago|date:"d/m/Y" }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,103 @@
+{% extends 'portal/base_portal.html' %}
+{% block titulo %}Inicio — Portal Berserker Ronin{% endblock %}
+
+{% block contenido %}
+
+<!-- Estado del pago -->
+<div class="card shadow-sm mb-4
+    {% if pago_mes %}border-success{% else %}border-danger{% endif %}">
+    <div class="card-body d-flex align-items-center gap-3">
+        {% if pago_mes %}
+            <i class="bi bi-check-circle-fill text-success" style="font-size: 2rem;"></i>
+            <div>
+                <div class="fw-semibold text-success">Pago al día</div>
+                <small class="text-muted">Pagaste {{ mes_actual }} — S/ {{ pago_mes.monto }}</small>
+            </div>
+        {% else %}
+            <i class="bi bi-exclamation-circle-fill text-danger" style="font-size: 2rem;"></i>
+            <div>
+                <div class="fw-semibold text-danger">Pago pendiente</div>
+                <small class="text-muted">Aún no registramos tu pago de {{ mes_actual }}</small>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Estadísticas -->
+<div class="row g-3 mb-4">
+    <div class="col-4">
+        <div class="card text-center shadow-sm">
+            <div class="card-body py-3">
+                <h3 class="text-primary mb-0">{{ total_asistencias }}</h3>
+                <small class="text-muted">Clases</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-4">
+        <div class="card text-center shadow-sm">
+            <div class="card-body py-3">
+                <h3 class="text-success mb-0">{{ presentes }}</h3>
+                <small class="text-muted">Asistidas</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-4">
+        <div class="card text-center shadow-sm">
+            <div class="card-body py-3">
+                <h3 class="text-info mb-0">{{ porcentaje }}%</h3>
+                <small class="text-muted">Asistencia</small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Últimas asistencias -->
+<div class="card shadow-sm mb-4">
+    <div class="card-header">
+        <i class="bi bi-clock-history me-2"></i>Últimas clases
+    </div>
+    <div class="card-body p-0">
+        {% if asistencias_recientes %}
+        <ul class="list-group list-group-flush">
+            {% for a in asistencias_recientes %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                <span>{{ a.fecha|date:"d/m/Y" }}</span>
+                {% if a.presente %}
+                    <span class="badge bg-success">Presente</span>
+                {% else %}
+                    <span class="badge bg-danger">Ausente</span>
+                {% endif %}
+            </li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <p class="text-muted text-center py-3 mb-0">Sin asistencias registradas.</p>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Mis clases -->
+{% if clases %}
+<div class="card shadow-sm">
+    <div class="card-header">
+        <i class="bi bi-calendar-week me-2"></i>Mis clases
+    </div>
+    <div class="card-body p-0">
+        <ul class="list-group list-group-flush">
+            {% for clase in clases %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                <div>
+                    <div class="fw-semibold">{{ clase.nombre }}</div>
+                    <small class="text-muted">
+                        {{ clase.get_dia_display }} · {{ clase.hora_inicio|time:"H:i" }}
+                    </small>
+                </div>
+                <span class="badge bg-secondary">{{ clase.get_disciplina_display }}</span>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+{% endif %}
+
+{% endblock %}

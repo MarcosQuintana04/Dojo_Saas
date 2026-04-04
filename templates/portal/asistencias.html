@@ -1,0 +1,66 @@
+{% extends 'portal/base_portal.html' %}
+{% block titulo %}Asistencias — Portal Berserker Ronin{% endblock %}
+
+{% block contenido %}
+
+<h4 class="mb-4">Mis asistencias</h4>
+
+<div class="row g-3 mb-4">
+    <div class="col-4">
+        <div class="card text-center shadow-sm">
+            <div class="card-body py-3">
+                <h3 class="mb-0">{{ total }}</h3>
+                <small class="text-muted">Total</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-4">
+        <div class="card text-center shadow-sm">
+            <div class="card-body py-3">
+                <h3 class="text-success mb-0">{{ presentes }}</h3>
+                <small class="text-muted">Presentes</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-4">
+        <div class="card text-center shadow-sm">
+            <div class="card-body py-3">
+                <h3 class="text-primary mb-0">{{ porcentaje }}%</h3>
+                <small class="text-muted">Asistencia</small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card shadow-sm">
+    <div class="table-responsive">
+        <table class="table table-hover mb-0 tabla-responsive">
+            <thead class="table-dark">
+                <tr>
+                    <th>Fecha</th>
+                    <th class="text-center">Estado</th>
+                    <th>Observación</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for a in asistencias %}
+                <tr>
+                    <td data-label="Fecha">{{ a.fecha|date:"d/m/Y" }}</td>
+                    <td data-label="Estado" class="text-center">
+                        {% if a.presente %}
+                            <span class="badge bg-success">Presente</span>
+                        {% else %}
+                            <span class="badge bg-danger">Ausente</span>
+                        {% endif %}
+                    </td>
+                    <td data-label="Observación" class="text-muted small">
+                        {{ a.observacion|default:"—" }}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}

@@ -20,6 +20,7 @@ INSTALLED_APPS = [
     'apps.horarios',
     'apps.reportes',
     'apps.configuracion',
+    'apps.portal',
 ]
 
 MIDDLEWARE = [
