@@ -32,9 +32,15 @@ class PagoForm(forms.ModelForm):
         return monto
     
     def __init__(self, *args, **kwargs):
+        # Recibimos el alumno si viene desde la vista
+        alumno = kwargs.pop('alumno', None)
         super().__init__(*args, **kwargs)
         self.fields['alumno'].queryset = Alumno.objects.filter(activo=True)
         hoy = datetime.date.today()
         self.fields['mes'].initial = hoy.month
         self.fields['anio'].initial = hoy.year
         self.fields['fecha_pago'].initial = hoy
+
+        # Si el alumno tiene monto configurado, lo pre-rellenamos
+        if alumno and alumno.monto_mensualidad:
+            self.fields['monto'].initial = alumno.monto_mensualidad

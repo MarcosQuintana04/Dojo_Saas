@@ -16,4 +16,5 @@ urlpatterns = [
     path('dashboard/',   include('apps.dashboard.urls',   namespace='dashboard')),
     path('horarios/',    include('apps.horarios.urls',    namespace='horarios')),
     path('reportes/',    include('apps.reportes.urls',    namespace='reportes')),
+    path('configuracion/', include('apps.configuracion.urls', namespace='configuracion')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

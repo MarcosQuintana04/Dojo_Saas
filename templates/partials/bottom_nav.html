@@ -4,18 +4,19 @@
 
         <a href="{% url 'dashboard:index' %}"
            class="d-flex flex-column align-items-center text-decoration-none py-2 px-3
-           {% if request.resolver_match.url_name == 'index' %}text-primary{% else %}text-secondary{% endif %}">
+           {% if request.resolver_match.app_name == 'dashboard' %}text-primary{% else %}text-secondary{% endif %}">
             <i class="bi bi-speedometer2" style="font-size: 1.4rem;"></i>
             <small style="font-size: 0.65rem;">Inicio</small>
         </a>
 
         <a href="{% url 'alumnos:lista' %}"
            class="d-flex flex-column align-items-center text-decoration-none py-2 px-3
-           {% if request.resolver_match.url_name == 'lista' or request.resolver_match.url_name == 'detalle' %}text-primary{% else %}text-secondary{% endif %}">
+           {% if request.resolver_match.app_name == 'alumnos' %}text-primary{% else %}text-secondary{% endif %}">
             <i class="bi bi-people-fill" style="font-size: 1.4rem;"></i>
             <small style="font-size: 0.65rem;">Alumnos</small>
         </a>
 
+        <!-- Botón central destacado -->
         <a href="{% url 'horarios:semanal' %}"
            class="d-flex flex-column align-items-center text-decoration-none py-2 px-3">
             <span class="bg-primary rounded-circle d-flex align-items-center justify-content-center mb-1"
@@ -27,19 +28,62 @@
 
         <a href="{% url 'asistencias:hoy' %}"
            class="d-flex flex-column align-items-center text-decoration-none py-2 px-3
-           {% if 'asistencia' in request.resolver_match.url_name %}text-primary{% else %}text-secondary{% endif %}">
+           {% if request.resolver_match.app_name == 'asistencias' %}text-primary{% else %}text-secondary{% endif %}">
             <i class="bi bi-calendar-check" style="font-size: 1.4rem;"></i>
             <small style="font-size: 0.65rem;">Asistencias</small>
         </a>
-        
 
-        <a href="{% url 'pagos:deudores' %}"
-           class="d-flex flex-column align-items-center text-decoration-none py-2 px-3
-           {% if request.resolver_match.app_name == 'pagos' %}text-primary{% else %}text-secondary{% endif %}">
-            <i class="bi bi-cash-stack" style="font-size: 1.4rem;"></i>
-            <small style="font-size: 0.65rem;">Pagos</small>
-        </a>
+        <!-- Botón Más — abre menú hacia arriba -->
+        <div class="position-relative">
+            <button
+                onclick="toggleMasMenu()"
+                class="d-flex flex-column align-items-center border-0 bg-transparent py-2 px-3
+                {% if request.resolver_match.app_name == 'pagos' or request.resolver_match.app_name == 'configuracion' or request.resolver_match.app_name == 'reportes' %}text-primary{% else %}text-secondary{% endif %}"
+                id="btnMas">
+                <i class="bi bi-grid" style="font-size: 1.4rem;"></i>
+                <small style="font-size: 0.65rem;">Más</small>
+            </button>
+
+            <!-- Menú desplegable hacia arriba -->
+            <div id="masMenu"
+                 class="position-absolute bg-white border rounded shadow-lg p-2"
+                 style="bottom: 60px; right: 0; width: 200px; display: none; z-index: 1050;">
+
+                <a href="{% url 'pagos:deudores' %}"
+                   class="d-flex align-items-center gap-3 text-decoration-none text-dark p-2 rounded
+                   {% if request.resolver_match.app_name == 'pagos' %}bg-light{% endif %}">
+                    <i class="bi bi-cash-stack text-success"></i>
+                    <span>Pagos</span>
+                </a>
+
+                <hr class="my-1">
+
+                <a href="{% url 'configuracion:panel' %}"
+                   class="d-flex align-items-center gap-3 text-decoration-none text-dark p-2 rounded
+                   {% if request.resolver_match.app_name == 'configuracion' %}bg-light{% endif %}">
+                    <i class="bi bi-gear text-secondary"></i>
+                    <span>Configuración</span>
+                </a>
+
+            </div>
+        </div>
 
     </div>
 </nav>
 <div class="d-md-none" style="height: 70px;"></div>
+
+<script>
+function toggleMasMenu() {
+    const menu = document.getElementById('masMenu');
+    menu.style.display = menu.style.display === 'none' ? 'block' : 'none';
+}
+
+// Cerrar el menú si el usuario toca fuera de él
+document.addEventListener('click', function(e) {
+    const menu = document.getElementById('masMenu');
+    const btn = document.getElementById('btnMas');
+    if (!menu.contains(e.target) && !btn.contains(e.target)) {
+        menu.style.display = 'none';
+    }
+});
+</script>

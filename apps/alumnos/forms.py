@@ -6,7 +6,7 @@ class AlumnoForm(forms.ModelForm):
     class Meta:
         model = Alumno
         fields = ['nombre', 'edad', 'telefono', 'email',
-                  'disciplina', 'cinturon', 'fecha_ingreso', 'foto']
+                  'disciplina', 'cinturon', 'fecha_ingreso', 'foto', 'monto_mensualidad']
         widgets = {
             'nombre':        forms.TextInput(attrs={'class': 'form-control'}),
             'edad':          forms.NumberInput(attrs={'class': 'form-control'}),
@@ -18,6 +18,11 @@ class AlumnoForm(forms.ModelForm):
                 attrs={'class': 'form-control', 'type': 'date'},
                 format='%Y-%m-%d'),
             'foto': forms.ClearableFileInput(attrs={'class': 'form-control'}),
+            'monto_mensualidad': forms.NumberInput(attrs={
+                'class': 'form-control',
+                'placeholder': '0.00',
+                'step': '0.01'
+            }),
         }
         labels = {
             'nombre':        'Nombre completo',
@@ -28,6 +33,7 @@ class AlumnoForm(forms.ModelForm):
             'cinturon':      'Cinturón / Nivel',
             'fecha_ingreso': 'Fecha de ingreso',
             'foto':          'Foto de perfil',
+            'monto_mensualidad': 'Monto mensual (S/)',
         }
 
     def __init__(self, *args, **kwargs):

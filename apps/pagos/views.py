@@ -11,14 +11,30 @@ import urllib.parse
 
 @login_required
 def registrar_pago(request):
+    # Permitir pre-seleccionar un alumno desde la URL
+    # ej: /pagos/nuevo/?alumno=5
+    alumno_id = request.GET.get('alumno')
+    alumno = None
+
+    if alumno_id:
+        from apps.alumnos.models import Alumno
+        try:
+            alumno = Alumno.objects.get(pk=alumno_id, activo=True)
+        except Alumno.DoesNotExist:
+            pass
+
     if request.method == 'POST':
-        form = PagoForm(request.POST)
+        form = PagoForm(request.POST, alumno=alumno)
         if form.is_valid():
             form.save()
             messages.success(request, 'Pago registrado correctamente.')
             return redirect('pagos:deudores')
     else:
-        form = PagoForm()
+        form = PagoForm(alumno=alumno)
+        # Pre-seleccionar el alumno en el selector
+        if alumno:
+            form.fields['alumno'].initial = alumno
+
     return render(request, 'pagos/form.html', {
         'form': form,
         'titulo': 'Registrar Pago'

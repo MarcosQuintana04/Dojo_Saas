@@ -42,6 +42,13 @@ class Alumno(models.Model):
         blank=True,
         null=True
     )
+    monto_mensualidad = models.DecimalField(  # ← nuevo
+        max_digits=8,
+        decimal_places=2,
+        null=True,
+        blank=True,
+        help_text='Monto fijo mensual de este alumno. Dejar vacío si no aplica.'
+    )
 
     def __str__(self):
         return f"{self.nombre} ({self.get_disciplina_display()})"

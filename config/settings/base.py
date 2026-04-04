@@ -19,6 +19,7 @@ INSTALLED_APPS = [
     'apps.dashboard',
     'apps.horarios',
     'apps.reportes',
+    'apps.configuracion',
 ]
 
 MIDDLEWARE = [
@@ -45,6 +46,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'apps.configuracion.context_processors.configuracion_dojo',
             ],
         },
     },

@@ -48,9 +48,9 @@
                                title="Enviar recordatorio por WhatsApp">
                                 <i class="bi bi-whatsapp"></i>
                             </a>
-                            <a href="{% url 'pagos:registrar' %}"
-                               class="btn btn-sm btn-outline-primary"
-                               title="Registrar pago">
+                            <a href="{% url 'pagos:registrar' %}?alumno={{ item.alumno.pk }}"
+                                class="btn btn-sm btn-outline-primary"
+                                title="Registrar pago">
                                 <i class="bi bi-cash"></i>
                             </a>
                         </div>

@@ -21,4 +21,8 @@
         class="{% if 'pago' in request.resolver_match.url_name or request.resolver_match.url_name == 'deudores' %}active{% endif %}">
         <i class="bi bi-cash-stack me-2"></i> Pagos
     </a>
+    <a href="{% url 'configuracion:panel' %}"
+        class="{% if request.resolver_match.app_name == 'configuracion' %}active{% endif %}">
+        <i class="bi bi-gear me-2"></i> Configuración
+    </a>
 </div>

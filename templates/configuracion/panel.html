@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+{% block titulo %}Configuración — Berserker Ronin{% endblock %}
+
+{% block contenido %}
+
+<div class="mb-4">
+    <h2 class="mb-0">Configuración del dojo</h2>
+    <small class="text-muted">Cambios aplicados inmediatamente en todo el sistema</small>
+</div>
+
+<div class="row g-4">
+
+    <!-- Configuración general -->
+    <div class="col-md-7">
+        <div class="card shadow-sm">
+            <div class="card-header">
+                <i class="bi bi-gear me-2"></i>Configuración general
+            </div>
+            <div class="card-body p-4">
+                <form method="POST">
+                    {% csrf_token %}
+                    {% for field in form %}
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">{{ field.label }}</label>
+                        {{ field }}
+                        {% if field.help_text %}
+                            <div class="form-text">{{ field.help_text }}</div>
+                        {% endif %}
+                        {% if field.errors %}
+                            {% for error in field.errors %}
+                                <div class="text-danger small mt-1">{{ error }}</div>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                    <div class="d-flex justify-content-end mt-4">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-check-lg me-1"></i> Guardar cambios
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Vista previa -->
+    <div class="col-md-5">
+        <div class="card shadow-sm">
+            <div class="card-header">
+                <i class="bi bi-eye me-2"></i>Configuración actual
+            </div>
+            <div class="card-body">
+                <dl class="row mb-0">
+                    <dt class="col-sm-5 text-muted small">Nombre</dt>
+                    <dd class="col-sm-7">{{ config.nombre }}</dd>
+
+                    <dt class="col-sm-5 text-muted small">Teléfono</dt>
+                    <dd class="col-sm-7">{{ config.telefono|default:"No configurado" }}</dd>
+
+                    <dt class="col-sm-5 text-muted small">Dirección</dt>
+                    <dd class="col-sm-7">{{ config.direccion|default:"No configurada" }}</dd>
+
+                    <dt class="col-sm-5 text-muted small">Mensaje</dt>
+                    <dd class="col-sm-7">
+                        <span class="small">{{ config.mensaje_bienvenida|default:"No configurado"|truncatechars:80 }}</span>
+                    </dd>
+                </dl>
+            </div>
+        </div>
+
+        <!-- Info montos -->
+        <div class="card shadow-sm mt-3">
+            <div class="card-header">
+                <i class="bi bi-cash me-2"></i>Montos de mensualidad
+            </div>
+            <div class="card-body">
+                <p class="text-muted small mb-3">
+                    El monto de cada alumno se configura individualmente 
+                    desde su perfil, ya que varía según acuerdos, becas y disciplina.
+                </p>
+                <a href="{% url 'alumnos:lista' %}" class="btn btn-outline-secondary btn-sm w-100">
+                    <i class="bi bi-people me-1"></i> Ir a lista de alumnos
+                </a>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}
