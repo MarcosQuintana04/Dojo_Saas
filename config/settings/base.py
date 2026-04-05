@@ -21,6 +21,7 @@ INSTALLED_APPS = [
     'apps.reportes',
     'apps.configuracion',
     'apps.portal',
+    'apps.landing',
 ]
 
 MIDDLEWARE = [
