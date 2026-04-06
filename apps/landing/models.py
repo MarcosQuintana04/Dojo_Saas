@@ -22,10 +22,11 @@ class Disciplina(models.Model):
     """Disciplinas mostradas en la landing."""
     nombre      = models.CharField(max_length=100)
     descripcion = models.TextField()
-    icono       = models.CharField(
-        max_length=50,
-        default='bi-trophy',
-        help_text='Clase de Bootstrap Icons, ej: bi-trophy'
+    imagen = models.ImageField(
+        upload_to='landing/disciplinas/',
+        blank=True,
+        null=True,
+        help_text='Imagen de fondo para la card de esta disciplina'
     )
     orden       = models.PositiveIntegerField(default=0)
     activa      = models.BooleanField(default=True)

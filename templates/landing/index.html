@@ -829,7 +829,13 @@
             {% for d in disciplinas %}
             <div class="col-md-{% if disciplinas|length == 2 %}6{% elif disciplinas|length == 3 %}4{% else %}3{% endif %} fade-up">
                 <div class="disc-card">
-                    <div class="disc-card-bg" style="background-image: url('https://images.unsplash.com/photo-1680022546558-550eaf22351e?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');"></div>
+                    <div class="disc-card-bg" style="
+                        {% if d.imagen %}
+                            background-image: url('{{ d.imagen.url }}');
+                        {% else %}
+                            background-color: var(--gris-3);
+                        {% endif %}
+                    "></div>
                     <div class="disc-card-overlay"></div>
                     <div class="disc-card-content">
                         <div class="disc-numero">0{{ forloop.counter }}</div>
@@ -841,42 +847,42 @@
             </div>
             {% endfor %}
         {% else %}
-            <div class="col-md-4 fade-up">
-                <div class="disc-card">
-                    <div class="disc-card-bg" style="background-image: url('https://unsplash.com/photos/a-couple-of-men-standing-on-top-of-a-wrestling-ring-2tZL1FnsC48');"></div>
-                    <div class="disc-card-overlay"></div>
-                    <div class="disc-card-content">
-                        <div class="disc-numero">01</div>
-                        <div class="disc-linea"></div>
-                        <h3 class="disc-nombre">Karate</h3>
-                        <p class="disc-desc">Arte marcial tradicional japonesa. Disciplina, técnica y espíritu.</p>
-                    </div>
+        <div class="col-md-4 fade-up">
+            <div class="disc-card">
+                <div class="disc-card-bg" style="background-color: var(--gris-3);"></div>
+                <div class="disc-card-overlay"></div>
+                <div class="disc-card-content">
+                    <div class="disc-numero">01</div>
+                    <div class="disc-linea"></div>
+                    <h3 class="disc-nombre">Karate</h3>
+                    <p class="disc-desc">Arte marcial tradicional japonesa. Disciplina, técnica y espíritu.</p>
                 </div>
             </div>
-            <div class="col-md-4 fade-up">
-                <div class="disc-card">
-                    <div class="disc-card-bg" style="background-image: url('https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=800');"></div>
-                    <div class="disc-card-overlay"></div>
-                    <div class="disc-card-content">
-                        <div class="disc-numero">02</div>
-                        <div class="disc-linea"></div>
-                        <h3 class="disc-nombre">MMA</h3>
-                        <p class="disc-desc">Artes marciales mixtas. Combina lo mejor de múltiples disciplinas.</p>
-                    </div>
+        </div>
+        <div class="col-md-4 fade-up">
+            <div class="disc-card">
+                <div class="disc-card-bg" style="background-color: var(--gris-3);"></div>
+                <div class="disc-card-overlay"></div>
+                <div class="disc-card-content">
+                    <div class="disc-numero">02</div>
+                    <div class="disc-linea"></div>
+                    <h3 class="disc-nombre">MMA</h3>
+                    <p class="disc-desc">Artes marciales mixtas. Combina lo mejor de múltiples disciplinas.</p>
                 </div>
             </div>
-            <div class="col-md-4 fade-up">
-                <div class="disc-card">
-                    <div class="disc-card-bg" style="background-image: url('https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=800');"></div>
-                    <div class="disc-card-overlay"></div>
-                    <div class="disc-card-content">
-                        <div class="disc-numero">03</div>
-                        <div class="disc-linea"></div>
-                        <h3 class="disc-nombre">Defensa Personal</h3>
-                        <p class="disc-desc">Técnicas prácticas para protegerte en situaciones reales.</p>
-                    </div>
+        </div>
+        <div class="col-md-4 fade-up">
+            <div class="disc-card">
+                <div class="disc-card-bg" style="background-color: var(--gris-3);"></div>
+                <div class="disc-card-overlay"></div>
+                <div class="disc-card-content">
+                    <div class="disc-numero">03</div>
+                    <div class="disc-linea"></div>
+                    <h3 class="disc-nombre">Defensa Personal</h3>
+                    <p class="disc-desc">Técnicas prácticas para protegerte en situaciones reales.</p>
                 </div>
             </div>
+        </div>
         {% endif %}
     </div>
 </section>
@@ -1073,7 +1079,7 @@
      GALERÍA
 ═══════════════════════════════════════ -->
 {% if fotos %}
-<section id="galeria" class="seccion-gris2">
+<section id="galeria" class="seccion-negro">
     <div class="container">
         <div class="text-center mb-5 fade-up">
             <div class="label-rojo justify-content-center">El dojo en imágenes</div>
@@ -1133,7 +1139,7 @@
 <!-- ═══════════════════════════════════════
      8. UBICACIÓN + HORARIOS
 ═══════════════════════════════════════ -->
-<section id="ubicacion" class="seccion-gris1">
+<section id="ubicacion" class="seccion-gris2">
     <div class="container">
         <div class="text-center mb-5 fade-up">
             <div class="label-rojo justify-content-center">Encuentranos</div>
